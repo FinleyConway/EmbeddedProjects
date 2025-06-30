@@ -442,8 +442,6 @@ private:
       uint8_t bit = bitRead(bitset, m_current_width);
       uint8_t offset = m_is_reverse ? 0 : CHAR_WIDTH;
 
-      Serial.println(m_current_width);
-
       // assign that bit the last bit in the buffer bitset
       bitWrite(m_bitset_buffer[i], offset, bit);
     }
@@ -514,12 +512,12 @@ void setup()
 
   Serial.begin(9600);
 
-  td.apply_text("hello mother");
+  td.apply_text("mr gus how you doin");
 }
 
 void loop()
 {
-  delay(100);
+  delay(50);
 
   td.display_text();
 }
