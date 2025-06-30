@@ -4,32 +4,56 @@ LedControl matrix = LedControl(12, 10, 11, 1);
 
 #define WIDTH 8
 #define HEIGHT 8
-#define GRID_SIZE WIDTH * HEIGHT
 
-struct moving_char // 66 bytes
+struct moving_char // 10 bytes
 {
   uint8_t x;
   uint8_t y;
-  uint8_t letter[GRID_SIZE];
+  uint8_t letter_rows[8];
 };
 
 
+/*
+NOTE:
+This works but rather un-efficient
+
+An array of bits for each and keep track of the offset will be far more better and easy.
+OR
+Due to bitset limitations, could have a bitset buffer and push and move these bits keeping track of:
+  - character distance (probably just 1 cell)
+  - size of character
+  - 
+*/
 moving_char char_a = {
   0, 0,
-  0, 0,
   {
-    0, 1, 1, 1, 0, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0,
-    1, 1, 1, 1, 1, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
+    0b01110000,
+    0b10001000,
+    0b10001000,
+    0b11111000,
+    0b10001000,
+    0b10001000,
+    0b10001000,
+    0b00000000
   }
 };
 
-bool buffer[GRID_SIZE] = { 0 };
+moving_char char_b = {
+  0, 0,
+  {
+    0b01111000,
+    0b10001000,
+    0b10001000,
+    0b01111000,
+    0b10001000,
+    0b10001000,
+    0b01111000,
+    0b00000000
+  }
+};
+
+uint8_t bitset_buffer[8];
+bool should_wrap = true;
 
 void setup()
 {
@@ -38,45 +62,23 @@ void setup()
   matrix.clearDisplay(0);
 
   Serial.begin(9600);
+
+  memcpy(bitset_buffer, char_a.letter_rows, 8);
 }
 
 void loop()
 {
-  delay(50);
+  delay(250);
 
-  char_a.x++;
-
-  if (char_a.x > WIDTH)
+  for (int i = 0; i < 8; i++)
   {
-    char_a.x = 0;
-    char_a.y++;
-  } 
+    uint8_t value = bitset_buffer[i];
 
-  if (char_a.y > HEIGHT) 
-  {
-    char_a.y = 0;
+    bitset_buffer[i] = (value >> 1) | (value << (8 - 1));
   }
 
-  // update to buffer
-  for (uint8_t x = 0; x < WIDTH; x++)
+  for (int i = 0; i < 8; i++)
   {
-    for (uint8_t y = 0; y < HEIGHT; y++)
-    {
-      uint8_t offset_x = (x + char_a.x) % WIDTH;
-      uint8_t offset_y = (y + char_a.y) % HEIGHT;
-
-      buffer[offset_x + offset_y * WIDTH] = char_a.letter[x + y * WIDTH];
-    }
+    matrix.setColumn(0, i, bitset_buffer[i]);
   }
-
-  // render matrix based on buffer
-  for (uint8_t x = 0; x < WIDTH; x++)
-  {
-    for (uint8_t y = 0; y < HEIGHT; y++)
-    {
-      matrix.setLed(0, x, y, buffer[x + y * WIDTH]);
-    }
-  }
-
-  memset(buffer, 0, sizeof(buffer));
 }
