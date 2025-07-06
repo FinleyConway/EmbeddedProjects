@@ -128,6 +128,12 @@ private:
 
     void draw_buffer_to_matrix()
     {
+        if (m_matrix == nullptr)
+        {
+            Serial.println("Led control is nullptr!");
+            return;
+        }
+
         for (uint8_t i = 0; i < 8; i++)
         {
             m_matrix->setRow(0, i, m_bitset_buffer[i]);
