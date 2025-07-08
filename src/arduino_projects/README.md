@@ -10,7 +10,8 @@ I wanted to recreate the scrolling text display often seen on public transport, 
 - 1 x LED Matrix
 - 5 x Male to Female jumper wires
 ### Demo
-<video src="assets/Text Displayer.mp4" width="360" height="640" controls></video>
+
+https://github.com/user-attachments/assets/64cf6234-d866-45d1-8c73-c6b8fc43096a
 
 ## Snake Game
 ### Overview
@@ -23,4 +24,5 @@ I felt that recreating snake on this is a must.
 - 4 x Push Switches
 ### Demo
 <img src="assets/Snake Arduino.png" width="360" height="640"></img>
-<video src="assets/Snake.mp4" width="360" height="640" controls></video>
+
+https://github.com/user-attachments/assets/f27ebea6-25e2-4099-bf5e-54807e390077
