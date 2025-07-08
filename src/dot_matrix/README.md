@@ -1,4 +1,4 @@
-# Arduino Projects
+# Dot Matrix
 
 These two are my first embedded projects to try out embedded programming. For these two proejcts I took advantage of the Arduino library and the LED Matrix that came with my starter kit.
 
