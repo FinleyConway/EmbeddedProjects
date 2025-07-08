@@ -1,27 +1,12 @@
 {
-  "name": "PlatformIO Dev Container",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "args": {
-			"FEDORA_COMPAT" : "1" // enables fedora compatibility mode (extra dialout group with gid 18)
-		}
-  },
-  "workspaceFolder": "${localWorkspaceFolderForContainerOS}",
+  "name": "Embedded Projects",
+  "image": "registry.fedoraproject.org/fedora-toolbox:42",
   "customizations": {
     "vscode": {
-      "settings": {
-				"terminal.integrated.defaultProfile.linux": "zsh"
-			},
       "extensions": [
       	"ms-vscode.cpptools",
         "platformio.platformio-ide"
       ]
     }
-  },
-  "mounts": [
-		"source=/dev/,target=/dev/,type=bind,consistency=consistent"
-	],
-  "remoteUser": "vscode",
-  "postAttachCommand": "sudo service udev restart"
+  }
 }
-
