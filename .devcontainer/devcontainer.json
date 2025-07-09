@@ -8,5 +8,8 @@
         "platformio.platformio-ide"
       ]
     }
-  }
+  },
+  "mounts": [
+		"source=/dev/,target=/dev/,type=bind,consistency=consistent"
+	]
 }

@@ -5,7 +5,7 @@
 // https://youtu.be/j4xw8QomkXs?si=MY4-R_DRftDwGGHI
 // who needs arduino.h :P
 
-int main()
+int blink_main()
 {
     // pinMode output at pin 7
     DDRH = DDRH | (1 << DDB4);
