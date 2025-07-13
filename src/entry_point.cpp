@@ -1,14 +1,21 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#include <Arduino.h>
+
 void set_pin(volatile uint8_t* port, uint8_t pin)
 {
-    *port = *port | (1 << pin);
+    *port |= (1 << pin);
 }
 
 void unset_pin(volatile uint8_t* port, uint8_t pin)
 {
-    *port = *port &~ (1 << pin);
+    *port &= ~(1 << pin);
+}
+
+bool read_pin(volatile uint8_t* port, uint8_t pin)
+{
+    return *port & (1 << pin);
 }
 
 void delay_micro(int ms)
@@ -54,18 +61,34 @@ void move_pulse(uint8_t degrees, const uint8_t pulse_cycle = 20)
         unset_pin(&PORTB, PORTB7);                                                     
         delay_milli(pulse_cycle);
     }
-}
+}        
 
 int main()
 {
-    set_pin(&DDRB, DDB7);
+    set_pin(&DDRB, DDB7); // pin 13
+    set_pin(&DDRH, DDB4); // pin 7
 
-    move_pulse(0);   
+    // input pullup
+    unset_pin(&DDRB, DDB6);
+    set_pin(&PORTB, PB6);
+
+    move_pulse(0);
 
     while (true)
     {
-        move_pulse(0, 1);
+        bool pin_state = read_pin(&PINB, PB6);
 
-        move_pulse(15, 1);
-    }                                                                                     
-}                                                                                                                                                                          
+        if (pin_state)
+        {
+            set_pin(&PORTH, PORTH4);
+
+            move_pulse(0, 0);
+        }
+        else
+        {
+            unset_pin(&PORTH, PORTH4);
+
+            move_pulse(90, 0);
+        }
+    }
+}
